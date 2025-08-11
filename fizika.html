@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fizika</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #28313B, #485563);
+        color: white;
+        text-align: center;
+        padding: 30px;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    select, input {
+        width: 80%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        outline: none;
+    }
+    button {
+        padding: 10px 20px;
+        background: #00ff99;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: black;
+        transition: background 0.3s;
+        margin: 5px;
+    }
+    button:hover {
+        background: #00cc7a;
+    }
+    #natija {
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="btn">⬅ Orqaga</a>
+    <h2>Fizika Hisoblash</h2>
+
+    <select id="formulaTanla" onchange="maydonlarYangilash()">
+        <option value="">Formulani tanlang</option>
+        <option value="f=ma">Kuch (F = m * a)</option>
+        <option value="e=mc2">Energiya (E = m * c²)</option>
+        <option value="v=s/t">Tezlik (v = s / t)</option>
+        <option value="p=mv">Impuls (p = m * v)</option>
+    </select>
+
+    <div id="kiritishMaydonlari"></div>
+
+    <button onclick="hisobla()">📝 Hisoblash</button>
+
+    <div id="natija"></div>
+</div>
+
+<script>
+function maydonlarYangilash() {
+    let formula = document.getElementById("formulaTanla").value;
+    let maydonlar = document.getElementById("kiritishMaydonlari");
+    maydonlar.innerHTML = "";
+
+    if (formula === "f=ma") {
+        maydonlar.innerHTML = `
+            <input type="number" id="m" placeholder="Massani kiriting (kg)">
+            <input type="number" id="a" placeholder="Tezlanishni kiriting (m/s²)">
+        `;
+    } 
+    else if (formula === "e=mc2") {
+        maydonlar.innerHTML = `
+            <input type="number" id="m" placeholder="Massani kiriting (kg)">
+        `;
+    }
+    else if (formula === "v=s/t") {
+        maydonlar.innerHTML = `
+            <input type="number" id="s" placeholder="Masofani kiriting (m)">
+            <input type="number" id="t" placeholder="Vaqtni kiriting (s)">
+        `;
+    }
+    else if (formula === "p=mv") {
+        maydonlar.innerHTML = `
+            <input type="number" id="m" placeholder="Massani kiriting (kg)">
+            <input type="number" id="v" placeholder="Tezlikni kiriting (m/s)">
+        `;
+    }
+}
+
+function hisobla() {
+    let formula = document.getElementById("formulaTanla").value;
+    let javob = "";
+
+    if (formula === "f=ma") {
+        let m = parseFloat(document.getElementById("m").value);
+        let a = parseFloat(document.getElementById("a").value);
+        if (isNaN(m) || isNaN(a)) { javob = "Iltimos, barcha maydonlarni to‘ldiring!"; }
+        else { javob = `Kuch F = ${m * a} N`; }
+    }
+    else if (formula === "e=mc2") {
+        let m = parseFloat(document.getElementById("m").value);
+        const c = 299792458; // m/s
+        if (isNaN(m)) { javob = "Iltimos, massani kiriting!"; }
+        else { javob = `Energiya E = ${m * c * c} J`; }
+    }
+    else if (formula === "v=s/t") {
+        let s = parseFloat(document.getElementById("s").value);
+        let t = parseFloat(document.getElementById("t").value);
+        if (isNaN(s) || isNaN(t) || t === 0) { javob = "Iltimos, masofa va vaqtni to‘g‘ri kiriting!"; }
+        else { javob = `Tezlik v = ${s / t} m/s`; }
+    }
+    else if (formula === "p=mv") {
+        let m = parseFloat(document.getElementById("m").value);
+        let v = parseFloat(document.getElementById("v").value);
+        if (isNaN(m) || isNaN(v)) { javob = "Iltimos, barcha maydonlarni to‘ldiring!"; }
+        else { javob = `Impuls p = ${m * v} kg·m/s`; }
+    }
+    else {
+        javob = "Formulani tanlang!";
+    }
+
+    document.getElementById("natija").innerText = javob;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kimyo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #28313B, #485563);
+        color: white;
+        text-align: center;
+        padding: 30px;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    select, input {
+        width: 80%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        outline: none;
+    }
+    button {
+        padding: 10px 20px;
+        background: #00ff99;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        color: black;
+        transition: background 0.3s;
+        margin: 5px;
+    }
+    button:hover {
+        background: #00cc7a;
+    }
+    #natija {
+        font-size: 18px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="btn">⬅ Orqaga</a>
+    <h2>Kimyo Hisoblash</h2>
+
+    <select id="formulaTanla" onchange="maydonlarYangilash()">
+        <option value="">Formulani tanlang</option>
+        <option value="mol">Mol soni (n = m / M)</option>
+        <option value="massa">Massa (m = n * M)</option>
+        <option value="konsentratsiya">Konsentratsiya (C = n / V)</option>
+    </select>
+
+    <div id="kiritishMaydonlari"></div>
+
+    <button onclick="hisobla()">📝 Hisoblash</button>
+
+    <div id="natija"></div>
+</div>
+
+<script>
+function maydonlarYangilash() {
+    let formula = document.getElementById("formulaTanla").value;
+    let maydonlar = document.getElementById("kiritishMaydonlari");
+    maydonlar.innerHTML = "";
+
+    if (formula === "mol") {
+        maydonlar.innerHTML = `
+            <input type="number" id="m" placeholder="Massani kiriting (g)">
+            <input type="number" id="M" placeholder="Molyar massani kiriting (g/mol)">
+        `;
+    } 
+    else if (formula === "massa") {
+        maydonlar.innerHTML = `
+            <input type="number" id="n" placeholder="Mol sonini kiriting (mol)">
+            <input type="number" id="M" placeholder="Molyar massani kiriting (g/mol)">
+        `;
+    }
+    else if (formula === "konsentratsiya") {
+        maydonlar.innerHTML = `
+            <input type="number" id="n" placeholder="Mol sonini kiriting (mol)">
+            <input type="number" id="V" placeholder="Hajmni kiriting (L)">
+        `;
+    }
+}
+
+function hisobla() {
+    let formula = document.getElementById("formulaTanla").value;
+    let javob = "";
+
+    if (formula === "mol") {
+        let m = parseFloat(document.getElementById("m").value);
+        let M = parseFloat(document.getElementById("M").value);
+        if (isNaN(m) || isNaN(M) || M === 0) { javob = "Iltimos, massani va molyar massani to‘g‘ri kiriting!"; }
+        else { javob = `Mol soni n = ${(m / M).toFixed(4)} mol`; }
+    }
+    else if (formula === "massa") {
+        let n = parseFloat(document.getElementById("n").value);
+        let M = parseFloat(document.getElementById("M").value);
+        if (isNaN(n) || isNaN(M)) { javob = "Iltimos, mol sonini va molyar massani to‘g‘ri kiriting!"; }
+        else { javob = `Massa m = ${(n * M).toFixed(4)} g`; }
+    }
+    else if (formula === "konsentratsiya") {
+        let n = parseFloat(document.getElementById("n").value);
+        let V = parseFloat(document.getElementById("V").value);
+        if (isNaN(n) || isNaN(V) || V === 0) { javob = "Iltimos, mol sonini va hajmni to‘g‘ri kiriting!"; }
+        else { javob = `Konsentratsiya C = ${(n / V).toFixed(4)} mol/L`; }
+    }
+    else {
+        javob = "Formulani tanlang!";
+    }
+
+    document.getElementById("natija").innerText = javob;
+}
+</script>
+
+</body>
+</html>
