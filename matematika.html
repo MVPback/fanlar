@@ -21,23 +21,30 @@
         margin: auto;
     }
     input {
-        width: 80%;
-        padding: 10px;
+        width: 90%;
+        padding: 12px;
         border-radius: 6px;
         border: none;
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 18px;
+        text-align: right;
     }
-    button {
-        margin: 5px;
-        padding: 10px 15px;
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    .btn {
+        padding: 15px;
+        font-size: 18px;
         border: none;
         border-radius: 6px;
         background: #00ff99;
         font-weight: bold;
         cursor: pointer;
     }
-    button:hover {
+    .btn:hover {
         background: #00cc7a;
     }
     #result {
@@ -53,9 +60,49 @@
 
 <div class="container">
     <h2>📐 Matematika Yordamchisi</h2>
-    <input type="text" id="formula" placeholder="Misol kiriting... (masalan: 2x+5=0 yoki radius=5)">
-    <br>
-    <button onclick="hisobla()">Oddiy Javob</button>
+    <input type="text" id="formula" placeholder="Misol kiriting...">
+    
+    <!-- Oddiy kalkulyator tugmalari -->
+    <div class="buttons">
+        <button class="btn" onclick="insert('7')">7</button>
+        <button class="btn" onclick="insert('8')">8</button>
+        <button class="btn" onclick="insert('9')">9</button>
+        <button class="btn" onclick="insert('/')">÷</button>
+
+        <button class="btn" onclick="insert('4')">4</button>
+        <button class="btn" onclick="insert('5')">5</button>
+        <button class="btn" onclick="insert('6')">6</button>
+        <button class="btn" onclick="insert('*')">×</button>
+
+        <button class="btn" onclick="insert('1')">1</button>
+        <button class="btn" onclick="insert('2')">2</button>
+        <button class="btn" onclick="insert('3')">3</button>
+        <button class="btn" onclick="insert('-')">−</button>
+
+        <button class="btn" onclick="insert('0')">0</button>
+        <button class="btn" onclick="insert('.')">.</button>
+        <button class="btn" onclick="backspace()">⌫</button>
+        <button class="btn" onclick="insert('+')">+</button>
+
+        <button class="btn" onclick="insert('(')">(</button>
+        <button class="btn" onclick="insert(')')">)</button>
+        <button class="btn" onclick="clearInput()">C</button>
+        <button class="btn" onclick="hisobla()">=</button>
+    </div>
+
+    <!-- Maxsus matematik tugmalar -->
+    <div class="buttons">
+        <button class="btn" onclick="insert('sin(')">sin</button>
+        <button class="btn" onclick="insert('cos(')">cos</button>
+        <button class="btn" onclick="insert('tan(')">tan</button>
+        <button class="btn" onclick="insert('sqrt(')">√</button>
+
+        <button class="btn" onclick="insert('log(')">log</button>
+        <button class="btn" onclick="insert('pi')">π</button>
+        <button class="btn" onclick="insert('e')">e</button>
+        <button class="btn" onclick="insert('^')">xʸ</button>
+    </div>
+
     <button onclick="grafik()">Grafik Chiz</button>
     <div id="result"></div>
     <canvas id="myChart" width="400" height="300"></canvas>
@@ -64,13 +111,24 @@
 <script>
 let chart;
 
+function insert(val) {
+    document.getElementById("formula").value += val;
+}
+function clearInput() {
+    document.getElementById("formula").value = "";
+    document.getElementById("result").innerHTML = "";
+}
+function backspace() {
+    let inp = document.getElementById("formula");
+    inp.value = inp.value.slice(0, -1);
+}
+
 function hisobla() {
     let input = document.getElementById("formula").value.trim();
     let resultBox = document.getElementById("result");
     resultBox.innerHTML = "";
 
     try {
-        // 1) Agar tenglama bo‘lsa ( "=" bor )
         if (input.includes("=")) {
             let parts = input.split("=");
             let left = parts[0];
@@ -80,27 +138,8 @@ function hisobla() {
             resultBox.innerHTML = "✏ Tenglama ildizi: x = " + JSON.stringify(solutions);
             return;
         }
-
-        // 2) Geometriya formulalari
-        if (input.includes("radius")) {
-            let r = parseFloat(input.split("=")[1]);
-            let S = Math.PI * r * r;
-            resultBox.innerHTML = "🔵 Aylana yuzasi: " + S.toFixed(3);
-            return;
-        }
-        if (input.includes("asos") && input.includes("balandlik")) {
-            let parts = input.split(",");
-            let a = parseFloat(parts[0].split("=")[1]);
-            let h = parseFloat(parts[1].split("=")[1]);
-            let S = 0.5 * a * h;
-            resultBox.innerHTML = "🔺 Uchburchak yuzasi: " + S;
-            return;
-        }
-
-        // 3) Oddiy arifmetika yoki funksiya qiymati
         let val = math.evaluate(input);
         resultBox.innerHTML = "📊 Natija: " + val;
-
     } catch (e) {
         resultBox.innerHTML = "❌ Xatolik: " + e.message;
     }
